@@ -53,8 +53,8 @@ export class UsersService extends PrismaClient implements OnModuleInit {
     const mappedUsers = users.map(user => ({
         ...user,
         chapter: user.Chapter.name, // Aquí reemplazas chapter_id por el nombre del capítulo
-        rol: user.rol === 'A' ? 'Administrador' : 'Votante', // Cambias el rol de 'A' a 'Administrador' o 'Votante'
-        status: user.status === 'H' ? 'Habilitado' : 'Inhabilitado' // Cambias el status a 'Habilitado' o 'Inhabilitado'
+        rol: user.rol === 'A' ? 'ADMINISTRADOR' : 'VOTANTE', // Cambias el rol de 'A' a 'Administrador' o 'Votante'
+        status: user.status === 'V' ? 'VIGENTE' : 'NO VIGENTE' // Cambias el status a 'Habilitado' o 'Inhabilitado'
     }));
 
     return {

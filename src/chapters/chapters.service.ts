@@ -33,7 +33,7 @@ export class ChaptersService extends PrismaClient implements OnModuleInit{
     const mappedChapter = Chapters.map(chapter=>(
       {
         ...chapter,
-        status: chapter.status === 'H' ? 'Habilitado' : 'Inhabilitado' ,
+        status: chapter.status === 'V' ? 'VIGENTE' : 'NO VIGENTE' ,
       }
     ));
 

@@ -1,4 +1,5 @@
-import { IsNumber, IsString, Min } from "class-validator";
+import { IsDate, IsNumber, IsString, Min } from "class-validator";
+import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
     @IsNumber()
@@ -29,8 +30,9 @@ export class CreateUserDto {
     @IsString()
     public email: string;
 
-    @IsString()
-    public address: string;
+    @IsDate()
+    @Transform(({ value }) => new Date(value)) // Transforma la cadena a Date
+    public date_of_birth: Date;
 
     @IsString()
     public code_access:string;

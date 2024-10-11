@@ -24,11 +24,10 @@ model User {
   surnames   String   @db.VarChar(255)
   phone      String   @db.VarChar(10)
   email      String   @db.VarChar(255)
-  address    String   @db.VarChar(255)
+  date_of_birth    DateTime   @db.Date()
   code_access String?  @db.VarChar(255)
   created_at DateTime @default(now()) @db.Timestamp(0)
   updated_at DateTime @updatedAt @db.Timestamp(0)
-  
   Chapter Chapter @relation(fields: [chapter_id], references: [id])
 
 }
