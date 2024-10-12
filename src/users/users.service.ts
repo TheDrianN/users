@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClient } from '@prisma/client';
 import { PaginationDto } from 'src/common';
 import { RpcException } from '@nestjs/microservices';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService extends PrismaClient implements OnModuleInit {
@@ -30,9 +31,19 @@ export class UsersService extends PrismaClient implements OnModuleInit {
       
    }
 
+   const hashedPassword = await this.hashPassword(createUserDto.password)
+    // Actualiza la propiedad 'password' en el DTO con la contraseña hasheada
+    createUserDto.password = hashedPassword;
+    
     return this.user.create({
       data: createUserDto
     });
+  }
+
+  // Método para crear un hash seguro de la contraseña
+  async hashPassword(password: string): Promise<string> {
+    const saltRounds = 10;
+    return await bcrypt.hash(password, saltRounds);
   }
 
   async findAll(paginationDto: PaginationDto) {
@@ -89,10 +100,26 @@ export class UsersService extends PrismaClient implements OnModuleInit {
     const {id:_, ...data} = updateUserDto
     await this.findOne(id);
 
-    return this.user.update({
-      where:{id},
-      data: data
-    });
+    const user = await this.user.findFirst({
+      where:{
+        document:data.document
+      }
+    })
+
+    if(data.password === user.password){
+      return this.user.update({
+        where:{id},
+        data: data
+      });
+    }else{
+      data.password = await this.hashPassword(data.password)
+      return this.user.update({
+        where:{id},
+        data: data
+      });
+    }
+
+   
   }
 
   async remove(id: number) {
