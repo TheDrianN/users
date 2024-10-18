@@ -77,14 +77,14 @@ export class ChaptersService extends PrismaClient implements OnModuleInit{
   async remove(id: number) {
     await this.findOne(id);
 
-   const member = await this.chapter.update({
-    where:{id},
-    data:{
-      status: 'I'
-    }
+   const member = await this.chapter.delete({
+    where:{id}
    })
 
-   return member;
+   return {
+    data:member,
+    status: HttpStatus.ACCEPTED
+   };
 
   }
 }

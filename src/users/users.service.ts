@@ -125,14 +125,14 @@ export class UsersService extends PrismaClient implements OnModuleInit {
   async remove(id: number) {
     await this.findOne(id);
 
-    const user = await this.user.update({
-      where:{id},
-      data:{
-        status:'I'
-      }
+    const user = await this.user.delete({
+      where:{id}
     })
 
-    return user
+    return {
+      status:HttpStatus.ACCEPTED,
+      data:user
+    }
   }
 
   async shearchDoc(doc: string){
