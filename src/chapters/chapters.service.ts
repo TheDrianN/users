@@ -77,14 +77,31 @@ export class ChaptersService extends PrismaClient implements OnModuleInit{
   async remove(id: number) {
     await this.findOne(id);
 
-   const member = await this.chapter.delete({
-    where:{id}
-   })
-
-   return {
-    data:member,
-    status: HttpStatus.ACCEPTED
-   };
-
+    const user = await this.user.findFirst({
+      where: {
+        chapter_id: id,
+      },
+    });
+  
+    // Si se encuentra un usuario, devolvemos un mensaje de que no se puede eliminar
+    if (user) {
+      return {
+        status: HttpStatus.CONFLICT,
+        message: 'No se puede eliminar el capítulo. Está asociado a otros datos.',
+      };
+    }
+  
+    // Si no hay usuarios asociados, procedemos a eliminar el capítulo
+    const deletedChapter = await this.chapter.delete({
+      where: {
+        id: id,
+      },
+    });
+  
+    return {
+      status: HttpStatus.OK,
+      message: 'Capítulo eliminado correctamente',
+      data: deletedChapter,
+    };
   }
 }
