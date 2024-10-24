@@ -106,13 +106,20 @@ export class UsersService extends PrismaClient implements OnModuleInit {
       }
     })
 
-    if(data.password === user.password){
-      return this.user.update({
-        where:{id},
-        data: data
-      });
+    if(data.password){
+      if(data.password === user.password){
+        return this.user.update({
+          where:{id},
+          data: data
+        });
+      }else{
+        data.password = await this.hashPassword(data.password)
+        return this.user.update({
+          where:{id},
+          data: data
+        });
+      }
     }else{
-      data.password = await this.hashPassword(data.password)
       return this.user.update({
         where:{id},
         data: data
