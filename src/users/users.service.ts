@@ -65,7 +65,13 @@ export class UsersService extends PrismaClient implements OnModuleInit {
         ...user,
         chapter: user.Chapter.name, // Aquí reemplazas chapter_id por el nombre del capítulo
         rol: user.rol === 'A' ? 'ADMINISTRADOR' : 'VOTANTE', // Cambias el rol de 'A' a 'Administrador' o 'Votante'
-        status: user.status === 'V' ? 'VIGENTE' : 'NO VIGENTE' // Cambias el status a 'Habilitado' o 'Inhabilitado'
+        status: user.status === 'V' 
+        ? 'VIGENTE' 
+        : user.status === 'I' 
+            ? 'NO VIGENTE' 
+            : user.status === 'B' 
+                ? 'BLOQUEADO' 
+                : 'DESCONOCIDO'
     }));
 
     return {
